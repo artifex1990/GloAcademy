@@ -1,9 +1,11 @@
-const title = 'Название проекта';
-const screens = 'Простые, Сложные, Интерактивные';
-const screenPrice = 123;
+'use strict';
+
+const title = prompt('Как называется ваш проект?');
+const screens = prompt('Какие типы экранов нужно разработать?');
+const screenPrice = parseInt(prompt('Сколько будет стоить данная работа?'));
 const rollback = Math.trunc(Math.random() * 100 + 1);
 const fullPrice = Infinity;
-const adaptive = true;
+const adaptive = !!prompt('Нужен ли адаптив на сайте?');
 
 //Вывести в консоль тип данных значений переменных title, fullPrice, adaptive;
 console.log(typeof title);
