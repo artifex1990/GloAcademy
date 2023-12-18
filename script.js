@@ -10,23 +10,27 @@ const secondService = prompt('Какой дополнительный тип у�
 const secondServicePrice = parseInt(prompt('Сколько это будет стоить?'));
 const fullPrice = screenPrice + firstServicePrice + secondServicePrice;
 const rollback = Math.random() * 100;
+const servicePercentPrice = Math.ceil(fullPrice - rollback);
+let discount = 0;
 let error = false;
 
-if (fullPrice > 30000) {
-    fullPrice -= fullPrice * 0.1;
-    console.log('Ваша скидка 10%!');
-} else if (fullPrice > 15000) {
-    fullPrice -= fullPrice * 0.05;
-    console.log('Ваша скидка 5%!');
-} else if (fullPrice > 0) {
-    console.log('Скидка не предусмотрена!');
-} else {
-    error = true;
-    console.log('Что то пошло не так!');
+switch(true) {
+    case fullPrice > 30000:
+        discount = fullPrice * 0.1;
+        console.log(`Ваша скидка 10% (${Math.ceil(discount * 100) / 100} руб.)!`);
+        break;
+    case fullPrice > 15000:
+        discount = fullPrice * 0.05;
+        console.log(`Ваша скидка 5% (${Math.ceil(discount * 100) / 100} руб.)!`);
+        break;
+    case fullPrice > 0:
+        console.log('Скидка не предусмотрена!');
+        break;
+    default:
+        error = true;
+        console.log('Что то пошло не так!');
 }
 
-const servicePercentPrice = Math.ceil(fullPrice - rollback);
-
 if (!error) {
-    console.log(`Итоговая стоимость за вычетом отката посреднику ${servicePercentPrice}`);
+    console.log(`Итоговая стоимость за вычетом отката посреднику и скидки: ${servicePercentPrice - discount} руб.`);
 }
