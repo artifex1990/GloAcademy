@@ -1,13 +1,14 @@
 'use strict';
 
-let title = prompt('Как называется ваш проект?');
-let screens = prompt('Какие типы экранов нужно разработать?');
-let screenPrice = parseInt(prompt('Сколько будет стоить данная работа?'));
-let adaptive = confirm('Нужен ли адаптив на сайте?');
-let firstService = prompt('Какой дополнительный тип услуги нужен?');
-let firstServicePrice = parseInt(prompt('Сколько это будет стоить?'));
-let secondService = prompt('Какой дополнительный тип услуги нужен?');
-let secondServicePrice = parseInt(prompt('Сколько это будет стоить?'));
+const title = prompt('Как называется ваш проект?');
+const screens = prompt('Какие типы экранов нужно разработать?');
+const screenPrice = parseInt(prompt('Сколько будет стоить данная работа?'));
+const adaptive = confirm('Нужен ли адаптив на сайте?');
+const firstService = prompt('Какой дополнительный тип услуги нужен?');
+const firstServicePrice = parseInt(prompt('Сколько это будет стоить?'));
+const secondService = prompt('Какой дополнительный тип услуги нужен?');
+const secondServicePrice = parseInt(prompt('Сколько это будет стоить?'));
+const rollback = Math.random() * 100;
 let fullPrice = 0;
 let servicePercentPrice = 0;
 let discount = 0;
@@ -17,8 +18,8 @@ const getAllServicePrices = function(servicePrice1, servicePrice2) {
     return servicePrice1 + servicePrice2;
 }
 
-function getFullPrice(screenPrice, call) {
-    return screenPrice + call(firstServicePrice, secondServicePrice);
+function getFullPrice(screenPrice, fullPrice) {
+    return screenPrice + fullPrice;
 }
 
 function getTitle(title) {
@@ -31,9 +32,7 @@ function getTitle(title) {
     return titleTemp[0].toUpperCase() + titleTemp.slice(1);
 }
 
-function getServicePercentPrices(fullPrice) {
-    const rollback = Math.random() * 100;
-
+function getServicePercentPrices(fullPrice, rollback) {
     return Math.ceil(fullPrice - rollback);
 }
 
@@ -54,10 +53,20 @@ function getRollbackMessage(fullPrice) {
     }
 }
 
-allServicePrices = getAllServicePrices(firstServicePrice, secondServicePrice);
-fullPrice = getFullPrice(screenPrice, getAllServicePrices);
-servicePercentPrice = getServicePercentPrices(fullPrice);
+function showTypeOf(variable) {
+    return typeof variable;
+}
 
+allServicePrices = getAllServicePrices(firstServicePrice, secondServicePrice);
+fullPrice = getFullPrice(screenPrice, allServicePrices);
+servicePercentPrice = getServicePercentPrices(fullPrice, rollback);
+
+console.log('Некоторые интересные моменты по типам в js');
+console.log(showTypeOf(getAllServicePrices));
+console.log(showTypeOf(getRollbackMessage(fullPrice)));
+console.log(showTypeOf(secondServicePrice));
+console.log(showTypeOf(adaptive));
+console.log('===================================');
 console.log(`Название проекта '${getTitle(title)}'`);
 console.log(`Экраны для разработки ${getScreens(screens)}`);
 console.log(getRollbackMessage(fullPrice));
