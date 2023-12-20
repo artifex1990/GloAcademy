@@ -12,9 +12,7 @@ let discount = 0;
 let allServicePrices = 0;
 
 const isNumber = function(number) {
-    const clearNumber = number.trim();
-
-    return !isNaN(clearNumber) && isFinite(clearNumber);
+    return !isNaN(parseFloat(number)) && isFinite(number) && !`${number}`.includes(' ');
 }
 
 const getAllServicePrices = function() {
