@@ -12,7 +12,7 @@ let discount = 0;
 let allServicePrices = 0;
 
 const isNumber = function(number) {
-    return !isNaN(parseFloat(number)) && isFinite(number) && !`${number}`.includes(' ');
+    return !isNaN(parseFloat(number)) && isFinite(number);
 }
 
 const getAllServicePrices = function() {
@@ -61,9 +61,9 @@ function getFullPrice(screenPrice, fullPrice) {
 function getTitle(title) {
     let titleTemp = title;
 
-    if (!titleTemp) return titleTemp;
+    if (!titleTemp || typeof title !== 'string') return titleTemp;
 
-    titleTemp = titleTemp.toLowerCase();
+    titleTemp = titleTemp.trim().toLowerCase();
 
     return titleTemp[0].toUpperCase() + titleTemp.slice(1);
 }
