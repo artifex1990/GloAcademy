@@ -55,7 +55,7 @@ const appData = {
     },
     
     getFullPrice: function() {
-        return this.screenPrice + this.fullPrice;
+        return this.screenPrice + this.allServicePrices;
     },
     
     getTitle: function(title) {
@@ -100,7 +100,7 @@ const appData = {
         this.asking();
 
         this.allServicePrices = this.getAllServicePrices();
-        this.fullPrice = this.getFullPrice(this.screenPrice, this.allServicePrices);
+        this.fullPrice = this.getFullPrice();
         this.servicePercentPrice = this.getServicePercentPrices();
 
         console.log('================Услуги===================');
@@ -115,7 +115,6 @@ const appData = {
     },
 
     logger: function() {
-        
         for(let key in this) {
             console.log(`${key}: ${this[key]}`);
         }
