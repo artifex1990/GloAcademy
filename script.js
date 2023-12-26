@@ -14,7 +14,7 @@ const appData = {
     },
 
     isString: function(string) {
-        return !this.isNumber(string) && typeof string === 'string';
+        return !this.isNumber(string) && typeof string === 'string' && string.length;
     },
 
     getAllScreenPrices: function() {  
@@ -29,7 +29,10 @@ const appData = {
         const maxScreens = 2;
         const maxServices = 2;
 
-        this.title = prompt('Как называется ваш проект?');
+        do {
+            this.title = prompt('Как называется ваш проект?');
+        } while(!this.isString(this.title));
+        
 
         for(let id = 0; id < maxScreens; id++) {
             let name = '';
@@ -43,8 +46,7 @@ const appData = {
                 price = prompt(`Сколько он будет стоить?`);
             } while(!this.isNumber(price));
 
-            price = parseFloat(price);
-            this.screens[id] = {id, name, price};
+            this.screens.push({id, name, price: parseFloat(price)});
         }
         
         for(let id = 0; id < maxServices; id++) {
@@ -59,8 +61,7 @@ const appData = {
                 price = prompt('Сколько будет стоить данная работа?');
             } while(!this.isNumber(price));
     
-            price = parseFloat(price);
-            this.additionalServices[id] = {id, name, price};
+            this.additionalServices.push({id, name, price: parseFloat(price)});
         }
     
         this.adaptive = confirm('Нужен ли адаптив на сайте?');
@@ -114,10 +115,13 @@ const appData = {
     start: function() {
         this.asking();
 
-        this.allServicePrices = this.getAllServicePrices();
         this.fullPrice = this.getFullPrice();
         this.servicePercentPrice = this.getServicePercentPrices();
 
+        this.logger();
+    },
+
+    logger: function() {
         console.log('================Услуги===================');
         this.printServices();
         
@@ -130,10 +134,8 @@ const appData = {
         console.log(`Итоговая стоимость за вычетом отката посреднику: ${this.servicePercentPrice} руб.`);
 
         console.log('================Поля и методы объекта appData===================');
-        this.logger();
-    },
 
-    logger: function() {
+
         for(let key in this) {
             console.log(`${key}: ${this[key]}`);
         }
