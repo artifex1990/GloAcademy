@@ -1,6 +1,6 @@
 'use strict';
 
-const title = document.getElementsByTagName('h1');
+const title = document.getElementsByTagName('h1').title;
 const calcBtn = document.getElementsByClassName('handler_btn').start;
 const resetBtn = document.getElementsByClassName('handler_btn').reset;
 const plusBtn = document.querySelector('.screen-btn');
@@ -8,7 +8,11 @@ const itemsPercent = document.querySelectorAll('.other-items.percent');
 const itemsNumber = document.querySelectorAll('.other-items.number');
 const inputRange = document.querySelector('.rollback input[type="range"]');
 const spanRange = document.querySelector('.rollback span.range-value');
-const totalInputs = Object.values(document.getElementsByClassName('total-input'));
+const total = document.getElementsByClassName('total-input').total;
+const totalCount = document.getElementsByClassName('total-input')['total-count'];
+const totalCountOther = document.getElementsByClassName('total-input')['total-count-other'];
+const totalCountRollback = document.getElementsByClassName('total-input')['total-count-rollback'];
+const totalFullCount = document.getElementsByClassName('total-input')['total-full-count'];
 let screens = document.querySelectorAll('.screen');
 
 const appData = {
