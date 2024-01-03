@@ -30,19 +30,19 @@ const appData = {
     checkScreens: function() {
         const selects = screens[0].parentNode.querySelectorAll('select');
         const inputs = screens[0].parentNode.querySelectorAll('input');
-        let disableCalcBtn = false;
+        let isActive = true;
     
         calcBtn.removeAttribute('disabled');
     
         selects.forEach(select => {
-            if (!select.value) disableCalcBtn = true;
+            if (!select.value) isActive = false;
         });
     
         inputs.forEach(input => {
-            if (!input.value) disableCalcBtn = true;
+            if (!input.value) isActive = false;
         });
 
-        if (disableCalcBtn) {
+        if (!isActive) {
             calcBtn.setAttribute('disabled', '');
             calcBtn.style.opacity = '45%';
             calcBtn.style.cursor = 'default';
@@ -71,6 +71,7 @@ const appData = {
         this.addScreens();
         this.addServices();
         this.showPrices();
+        this.setCalcRollback();
     },
 
     reset: function() {
@@ -165,9 +166,19 @@ const appData = {
         return this.screens.reduce((acc, screen) => acc += screen.count, 0);
     },
 
+    setCalcRollback: function() {
+        calcBtn.setAttribute('calculaterollback', '');
+    },
+
     setRollback: function(event) {
         this.rollback = +event.target.value;
         spanRange.textContent = event.target.value + '%';
+
+        if (calcBtn.hasAttribute('calculaterollback')) {
+            this.addScreens();
+            this.addServices();
+            this.showPrices();
+        }
     },
 
     addTitle: function() {
@@ -231,7 +242,7 @@ const appData = {
     updateEventsForScreen: function() {
         const screens = document.querySelectorAll('.screen');
         screens.forEach((event) => {
-            event.addEventListener('change', () => {
+            event.addEventListener('input', () => {
                 this.checkScreens();
             });
         });
