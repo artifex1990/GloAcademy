@@ -115,7 +115,6 @@ const appData = {
             el.checked = false;
         });
 
-        
         hiddenCmsVariants.style.display = 'none';
         mainInput.style.display = 'none';
         select.value = ''; 
