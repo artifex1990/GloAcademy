@@ -57,15 +57,79 @@ const appData = {
     init: function() {
         this.addTitle();
         calcBtn.addEventListener('click', () => this.start());
+        resetBtn.addEventListener('click', () => this.reset());
         plusBtn.addEventListener('click', () => this.addScreenBlock());
         inputRange.addEventListener('input', (event) => this.setRollback(event));
         this.updateEventsForScreen();
     },
 
     start: function() {
+        this.blockScreen();
+        this.blockAdditionalServices();
+        this.replaceBtnControlOnReset();
+
         this.addScreens();
         this.addServices();
         this.showPrices();
+    },
+
+    reset: function() {
+        this.resetScreen();
+        this.resetAdditionalServices();
+        this.replaceBtnControlOnCalc();
+        
+        this.addScreens();
+        this.addServices();
+        this.showPrices();
+    },
+
+    resetScreen: function() {
+        const screens = document.querySelectorAll('.screen');
+
+        screens.forEach((el, index) => {
+            const select = el.querySelector('select');
+            const input = el.querySelector('input');
+            if (!index) {
+                select.value = '';
+                select.removeAttribute('disabled');
+                input.value = '';
+                input.removeAttribute('disabled');
+            } else {
+                el.remove();
+            }  
+        });
+    },
+
+    resetAdditionalServices: function() {
+        document.querySelectorAll('input[type=checkbox]').forEach(el => {
+            el.removeAttribute('disabled');
+            el.checked = false;
+        });
+    },
+
+    replaceBtnControlOnCalc: function() {
+        plusBtn.style.display = '';
+        calcBtn.style.display = '';
+        resetBtn.style.display = 'none';
+    },
+
+    replaceBtnControlOnReset: function() {
+        plusBtn.style.display = 'none';
+        calcBtn.style.display = 'none';
+        resetBtn.style.display = '';
+    },
+
+    blockScreen: function() {
+        const screens = document.querySelectorAll('.screen');
+
+        screens.forEach(el => {
+            el.querySelector('select').setAttribute('disabled', '');
+            el.querySelector('input').setAttribute('disabled', '');
+        });
+    },
+
+    blockAdditionalServices: function() {
+        document.querySelectorAll('input[type=checkbox]').forEach(el => el.setAttribute('disabled', ''));
     },
 
     getAllScreenPrices: function() {  
@@ -94,7 +158,7 @@ const appData = {
     },
 
     getPriceWithRollback: function() {
-        return Math.ceil(this.getFullPrice() - this.getFullPrice() * this.rollback / 100);
+        return Math.ceil(this.getFullPrice() + this.getFullPrice() * this.rollback / 100);
     },
 
     getScreenCount: function() {
