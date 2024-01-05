@@ -87,6 +87,7 @@ const appData = {
         this.addScreens();
         this.addServices();
         this.showPrices();
+        this.updateEventsForScreen();
     },
 
     resetScreen: function() {
