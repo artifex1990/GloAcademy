@@ -14,6 +14,9 @@ const totalCountOther = document.getElementsByClassName('total-input')['total-co
 const totalCountRollback = document.getElementsByClassName('total-input')['total-count-rollback'];
 const totalFullCount = document.getElementsByClassName('total-input')['total-full-count'];
 const screens = document.querySelectorAll('.screen');
+const cmsOpen = document.getElementById('cms-open');
+const hiddenCmsVariants = document.querySelector('.hidden-cms-variants');
+const cmsOtherInput = document.getElementById('cms-other-input');
 
 const appData = {
     title: '',
@@ -57,16 +60,96 @@ const appData = {
     init: function() {
         this.addTitle();
         calcBtn.addEventListener('click', () => this.start());
+        resetBtn.addEventListener('click', () => this.reset());
         plusBtn.addEventListener('click', () => this.addScreenBlock());
+        cmsOpen.addEventListener('click', (event) => this.setCms(event));
+        hiddenCmsVariants.querySelector('select').addEventListener('click', (event) => this.setCmsVariant(event));
         inputRange.addEventListener('input', (event) => this.setRollback(event));
         this.updateEventsForScreen();
     },
 
     start: function() {
+        this.blockScreen();
+        this.blockAdditionalServices();
+        this.replaceBtnControlOnReset();
+
         this.addScreens();
         this.addServices();
         this.showPrices();
         this.setCalcRollback();
+    },
+
+    reset: function() {
+        this.resetScreen();
+        this.resetAdditionalServices();
+        this.replaceBtnControlOnCalc();
+        
+        this.addScreens();
+        this.addServices();
+        this.showPrices();
+        this.updateEventsForScreen();
+    },
+
+    resetScreen: function() {
+        const screens = document.querySelectorAll('.screen');
+
+        screens.forEach((el, index) => {
+            const select = el.querySelector('select');
+            const input = el.querySelector('input');
+            if (!index) {
+                select.value = '';
+                select.removeAttribute('disabled');
+                input.value = '';
+                input.removeAttribute('disabled');
+            } else {
+                el.remove();
+            }  
+        });
+    },
+
+    resetAdditionalServices: function() {
+        const select = hiddenCmsVariants.querySelector('select');
+        const mainInput = hiddenCmsVariants.querySelector('.main-controls__input');
+
+        document.querySelectorAll('input[type=checkbox]').forEach(el => {
+            el.removeAttribute('disabled');
+            el.checked = false;
+        });
+
+        hiddenCmsVariants.style.display = 'none';
+        mainInput.style.display = 'none';
+        select.value = ''; 
+        select.removeAttribute('disabled');
+        cmsOtherInput.removeAttribute('disabled', '');
+        calcBtn.removeAttribute('calculaterollback');
+        this.setOtherValue('');
+    },
+
+    replaceBtnControlOnCalc: function() {
+        plusBtn.style.display = '';
+        calcBtn.style.display = '';
+        resetBtn.style.display = 'none';
+    },
+
+    replaceBtnControlOnReset: function() {
+        plusBtn.style.display = 'none';
+        calcBtn.style.display = 'none';
+        resetBtn.style.display = '';
+    },
+
+    blockScreen: function() {
+        const screens = document.querySelectorAll('.screen');
+
+        screens.forEach(el => {
+            el.querySelector('select').setAttribute('disabled', '');
+            el.querySelector('input').setAttribute('disabled', '');
+        });
+    },
+
+    blockAdditionalServices: function() {
+        document.querySelectorAll('input[type=checkbox]').forEach(el => el.setAttribute('disabled', ''));
+        hiddenCmsVariants.querySelector('select').setAttribute('disabled', '');
+        cmsOtherInput.setAttribute('disabled', '');
     },
 
     getAllScreenPrices: function() {  
@@ -81,7 +164,10 @@ const appData = {
     },
 
     getFullPrice: function() {
-        return this.getAllScreenPrices() + this.getAllServicePrices();
+        const commonSumServicesAndScreen = this.getAllScreenPrices() + this.getAllServicePrices();
+        const percentWithCms = this.getOtherValue() > 49 ? commonSumServicesAndScreen * this.getOtherValue() / 100 : 0;
+
+        return commonSumServicesAndScreen + percentWithCms;
     },
     
     getTitle: function(title) {
@@ -95,11 +181,19 @@ const appData = {
     },
 
     getPriceWithRollback: function() {
-        return Math.ceil(this.getFullPrice() - this.getFullPrice() * this.rollback / 100);
+        return Math.ceil(this.getFullPrice() + this.getFullPrice() * this.rollback / 100);
     },
 
     getScreenCount: function() {
         return this.screens.reduce((acc, screen) => acc += screen.count, 0);
+    },
+
+    getOtherValue: function() {
+        return !this.isNumber(+cmsOtherInput.value) ? 0 : +cmsOtherInput.value;
+    },
+
+    setOtherValue: function(value) {
+        cmsOtherInput.value = !this.isNumber(+value) ? '' : value;
     },
 
     setCalcRollback: function() {
@@ -114,6 +208,27 @@ const appData = {
             this.addScreens();
             this.addServices();
             this.showPrices();
+        }
+    },
+
+    setCms: function(event) {
+        if (event.target.checked) {
+            hiddenCmsVariants.style.display = 'flex';
+        } else {
+            hiddenCmsVariants.style.display = 'none';
+            hiddenCmsVariants.querySelector('select').value = '';
+            this.setOtherValue('');
+        }
+    },
+
+    setCmsVariant: function(event) {
+        const mainInput = hiddenCmsVariants.querySelector('.main-controls__input');
+
+        if (event.target.value === 'other') {
+            mainInput.style.display = 'flex';
+        } else {
+            this.setOtherValue(event.target.value);
+            mainInput.style.display = 'none';
         }
     },
 
