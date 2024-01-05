@@ -121,6 +121,7 @@ const appData = {
         select.value = ''; 
         select.removeAttribute('disabled');
         cmsOtherInput.removeAttribute('disabled', '');
+        calcBtn.removeAttribute('calculaterollback');
         this.setOtherValue('');
     },
 
